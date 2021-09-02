@@ -1,0 +1,32 @@
+{
+  "name": "monoxide.js",
+  "version": "0.0.1",
+  "description": "An evolution of oxide client for Carbon, a data injest tool which is a part of the Graphite project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raffaelecalza/monoxide.js"
+  },
+  "keywords": [
+    "graphite",
+    "carbon",
+    "data",
+    "client"
+  ],
+  "author": "Taylor Blau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/raffaelecalza/monoxide.js/issues"
+  },
+  "homepage": "https://github.com/raffaelecalza/monoxide.js",
+  "dependencies": {
+    "expect.js": "^0.3.1",
+    "lodash": "^3.5.0",
+    "mocha": "^2.2.1",
+    "sinon": "^1.14.1",
+    "timekeeper": "0.0.5"
+  }
+}
