@@ -17,3 +17,4 @@ CarbonClient.prototype.record = function (path, value, timestamp) {
 }
 
 module.exports = CarbonClient;
+
