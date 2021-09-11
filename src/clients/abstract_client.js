@@ -1,79 +1,69 @@
-var PlaintextProtocol = require('../protocols/plaintext_protocol.js'),
-    net = require('net'),
-    _ = require('lodash');
+const net = require('net')
+const EventEmitter = require('events')
 
-Client.prototype.send = function (protocol) {
-  var tempQueue = this.queue.slice(0);
-  var data = this.protocol.format(tempQueue);
+class AbstractClient extends EventEmitter {
+  constructor (config, protocol) {
+    super()
+    this.config = config
+    this.protocol = protocol
+    this._queue = []
+    this._interval = null
 
-  this._writeToSocket(data, function (err) {
-    if (err) throw err;
-    this.queue = _.difference(this.queue, tempQueue);
-  }.bind(this));
-}
-
-Client.prototype._writeToSocket = function (formatted, callback) {
-  if (this.queue.length === 0) {
-    return;
-  } else {
-    if (typeof this.socket === 'undefined') return;
-
-    this.socket.write(formatted + "\r\n", "utf-8", callback)
-  }
-}
-
-const net = require('net');
-
-class AbstractClient {
-  // Private properties
-  #queue = [];
-  #socket;
-  #interval;
-  config;
-  protocol;
-
-  constructor(config, protocol) {
-    this.prefix = prefix;
-    this.net_config = config;
-    this.protocol = protocol;
-    this.#initializeSocket();
+    // initialize net socket and open connection
+    this._initializeSocket()
   }
 
-  start() {
-    this.#interval = setInterval((() => {
-      if(this.#queue.length != 0)
-        this.#sendMetrics();
-    }).bind(this), this.interval);
+  start () {
+    this._connect()
+    this._interval = setInterval(() => {
+      if (this._queue.length !== 0) { this._sendMetrics() }
+    }, this.interval)
   }
 
-  stop() {
-    if(this.#interval) {
-      this.#interval.clearInterval();
+  stop () {
+    if (this._interval) {
+      clearInterval(this._interval)
+      this._interval = null
+      this._disconnect()
     }
   }
 
-  #enqueue(metric) {
-    this.#queue.push(metric);
+  _sendMetrics () {
+    const sendingQueue = [...this._queue]
+    const encodedMetrics = this.protocol.format(sendingQueue)
+
+    this._socket.write(`${encodedMetrics}\r\n`, 'utf-8', (err) => {
+      if (err) { this.emit('error', err) }
+
+      this._queue = this._queue.filter(metric => sendingQueue.includes(metric))
+    })
   }
 
-  #pathify(path) {
-    return this.config.prefix ? `${this.config.prefix}.${path}` : path;
+  _enqueue (metric) {
+    this._queue.push(metric)
   }
 
-  #initializeSocket() {
-    this.#socket = new net.Socket();
+  _pathify (path) {
+    return this.config.prefix ? `${this.config.prefix}.${path}` : path
   }
 
-  #connect(cb) {
-    this.#socket.connect({
+  _initializeSocket () {
+    this._socket = new net.Socket()
+    this._socket.on('error', (err) => {
+      this.emit('error', err)
+    })
+  }
+
+  _connect () {
+    this._socket.connect({
       host: this.config.host,
       port: this.config.port
-    }, cb);
+    })
   }
 
-  #disconnect() {
-    this.#socket.destroy();
+  _disconnect () {
+    this._socket.destroy()
   }
 }
 
-module.exports = AbstractClient;
+module.exports = AbstractClient

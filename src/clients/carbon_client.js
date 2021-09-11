@@ -1,20 +1,17 @@
-var util = require('util'),
-    OxideClient = require('./oxide_client.js'),
-    Metric = require('../metrics/metric.js');
+const AbstractClient = require('./abstract_client')
+const PlainTextProtocol = require('../protocols').PlainTextProtocol
+const CarbonMetric = require('../metrics').CarbonMetric
 
-function CarbonClient (opts) {
-  OxideClient.call(this, opts);
-}
-util.inherits(CarbonClient, OxideClient);
-
-CarbonClient.prototype.record = function (path, value, timestamp) {
-  var opts = { path: this._pathify(path), value: value }
-  if (typeof timestamp !== 'undefined') {
-    opts.timestamp = timestamp
+class CarbonClient extends AbstractClient {
+  constructor (config) {
+    super(config, new PlainTextProtocol())
   }
 
-  return this.enqueue(new Metric(opts));
+  record (path, value, timestamp) {
+    const metric = new CarbonMetric(path, value, timestamp)
+
+    this._enqueue(metric)
+  }
 }
 
-module.exports = CarbonClient;
-
+module.exports = CarbonClient
