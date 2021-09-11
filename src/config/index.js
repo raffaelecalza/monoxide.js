@@ -1,1 +1,1 @@
-module.exports = require('./monoxide_config');
+module.exports = require('./monoxide_config')
