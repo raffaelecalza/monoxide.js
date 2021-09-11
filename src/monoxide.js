@@ -1,9 +1,11 @@
-const Clients = require('./clients');
-const Metrics = require('./metrics');
-const Protocol = require('./protocol');
+const Clients = require('./clients')
+const Metrics = require('./metrics')
+const Protocols = require('./protocols')
+const Config = require('./config')
 
 module.exports = {
-    Clients,
-    Metrics,
-    Protocol
+  Config,
+  Clients,
+  Metrics,
+  Protocols
 }
