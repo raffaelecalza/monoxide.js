@@ -1,15 +1,17 @@
-function AbstractProtocol (transformFn) {
-  Object.defineProperty(this, 'transform', { value: transformFn })
+class AbstractProtocol {
+  constructor (transformFunction) {
+    if (!transformFunction) { throw new Error('Tranform function cannot be null, it must have a value to work') }
+
+    this._transformFunction = transformFunction
+  }
+
+  transformTimestamp (timestamp) {
+    return Math.floor(timestamp / 1000)
+  }
+
+  format (metrics, joinSequence) {
+    return metrics.map(this._transformFunction).join(joinSequence)
+  }
 }
 
-AbstractProtocol.prototype.map = function (metrics) {
-  return metrics.map(function (metric) {
-    return this.transform(metric);
-  }.bind(this));
-}
-
-AbstractProtocol.prototype._formatTimestamp = function (date) {
-  return Math.floor(date / 1000);
-}
-
-module.exports = AbstractProtocol;
+module.exports = AbstractProtocol

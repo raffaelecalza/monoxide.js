@@ -1,15 +1,13 @@
-var AbstractProtocol = require('./abstract_protocol.js'),
-    util = require('util')
+const AbstractProtocol = require('./abstract_protocol')
 
-function PlaintextProtocol () {
-  AbstractProtocol.call(this, function (metric) {
-    return [metric.path, metric.value, this._formatTimestamp(metric.timestamp)].join(' ');
-  });
-}
-util.inherits(PlaintextProtocol, AbstractProtocol);
+class PlaintextProtocol extends AbstractProtocol {
+  constructor () {
+    super((metric) => [metric.path, this.transformTimestamp(metric.timestamp), metric.value].join(' '))
+  }
 
-PlaintextProtocol.prototype.format = function (metrics) {
-  return this.map(metrics).join("\n");
+  format (metrics) {
+    return super.format(metrics, '\n')
+  }
 }
 
-module.exports = PlaintextProtocol;
+module.exports = PlaintextProtocol

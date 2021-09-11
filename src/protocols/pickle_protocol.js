@@ -1,15 +1,13 @@
-var AbstractProtocol = require('./abstract_protocol.js'),
-    util = require('util')
+const AbstractProtocol = require('./abstract_protocol')
 
-function PickleProtocol () {
-  AbstractProtocol.call(this, function (metric) {
-    return "("+metric.path+", ("+this._formatTimestamp(metric.timestamp)+", "+metric.value+"))"
-  });
-}
-util.inherits(PickleProtocol, AbstractProtocol);
+class PickleProtocol extends AbstractProtocol {
+  constructor () {
+    super((metric) => `(${metric.path}, (${this.transformTimestamp(metric.timestamp)}, ${metric.value}))`)
+  }
 
-PickleProtocol.prototype.format = function (metrics) {
-  return "["+this.map(metrics).join(", ")+"]";
+  format (metrics) {
+    return `[${super.format(metrics, ', ')}]`
+  }
 }
 
-module.exports = PickleProtocol;
+module.exports = PickleProtocol
