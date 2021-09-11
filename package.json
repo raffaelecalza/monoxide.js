@@ -4,7 +4,7 @@
   "description": "An evolution of oxide client for Carbon, a data injest tool which is a part of the Graphite project.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "standard && jest"
   },
   "repository": {
     "type": "git",
@@ -16,12 +16,22 @@
     "data",
     "client"
   ],
+  "standard": {
+    "ignore": [
+      "old_test/*",
+      "test/*",
+      "jest.config.js"
+    ]
+  },
   "author": "Raffaele Calzà",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/raffaelecalza/monoxide.js/issues"
   },
   "homepage": "https://github.com/raffaelecalza/monoxide.js",
-  "dependencies": {
+  "devDependencies": {
+    "jest": "^27.1.1",
+    "standard": "*",
+    "timekeeper": "^2.2.0"
   }
 }
