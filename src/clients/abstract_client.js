@@ -3,6 +3,7 @@ const EventEmitter = require('events')
 
 class AbstractClient extends EventEmitter {
   constructor (config, protocol) {
+    if (!config || !protocol) { throw new Error('A config object and a protocol object must be passed to the constructor') }
     super()
     this.config = config
     this.protocol = protocol
