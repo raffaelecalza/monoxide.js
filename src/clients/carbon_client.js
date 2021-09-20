@@ -8,7 +8,7 @@ class CarbonClient extends AbstractClient {
   }
 
   record (path, value, timestamp) {
-    const metric = new CarbonMetric(path, value, timestamp)
+    const metric = new CarbonMetric(this._pathify(path), value, timestamp)
 
     this._enqueue(metric)
   }

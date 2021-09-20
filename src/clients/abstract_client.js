@@ -17,7 +17,9 @@ class AbstractClient extends EventEmitter {
   start () {
     this._connect()
     this._interval = setInterval(() => {
-      if (this._queue.length !== 0) { this._sendMetrics() }
+      if (this._queue.length !== 0) {
+        this._sendMetrics()
+      }
     }, this.config.interval)
   }
 
@@ -36,7 +38,7 @@ class AbstractClient extends EventEmitter {
     this._socket.write(`${encodedMetrics}\r\n`, 'utf-8', (err) => {
       if (err) { this.emit('error', err) }
 
-      this._queue = this._queue.filter(metric => sendingQueue.includes(metric))
+      this._queue = this._queue.filter(metric => !sendingQueue.includes(metric))
       this.emit('metrics-sent')
     })
   }
