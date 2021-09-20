@@ -18,7 +18,7 @@ class AbstractClient extends EventEmitter {
     this._connect()
     this._interval = setInterval(() => {
       if (this._queue.length !== 0) { this._sendMetrics() }
-    }, this.interval)
+    }, this.config.interval)
   }
 
   stop () {
@@ -37,6 +37,7 @@ class AbstractClient extends EventEmitter {
       if (err) { this.emit('error', err) }
 
       this._queue = this._queue.filter(metric => sendingQueue.includes(metric))
+      this.emit('metrics-sent')
     })
   }
 
