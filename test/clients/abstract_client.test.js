@@ -131,7 +131,7 @@ describe('Abstract Client test', () => {
             dataCb = null
             client.stop()
             let timestamp = Math.floor(Date.now() / 1000)
-            const expectedResult = `metric.1 ${timestamp} 1\nmetric.2 ${timestamp} 2\nmetric.3 ${timestamp} 3\r\n`
+            const expectedResult = `metric.1 1 ${timestamp}\nmetric.2 2 ${timestamp}\nmetric.3 3 ${timestamp}\r\n`
             expect(data).toEqual(expectedResult)
             expect(client._queue.length).toEqual(0)
             Timekeeper.reset()

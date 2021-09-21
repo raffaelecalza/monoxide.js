@@ -10,7 +10,7 @@ describe('Plaintext Protocol test', () => {
     })
 
     test('format metrics following the plaintext format', () => {
-        const transformFunction = (metric) => [metric.path, (Math.floor(metric.timestamp / 1000)), metric.value].join(' ')
+        const transformFunction = (metric) => [metric.path, metric.value, (Math.floor(metric.timestamp / 1000))].join(' ')
         const prot = new PlaintextProtocol()
         const time = new Date()
         Timekeeper.freeze(time)

@@ -2,7 +2,7 @@ const AbstractProtocol = require('./abstract_protocol')
 
 class PlaintextProtocol extends AbstractProtocol {
   constructor () {
-    super((metric) => [metric.path, this.transformTimestamp(metric.timestamp), metric.value].join(' '))
+    super((metric) => [metric.path, metric.value, this.transformTimestamp(metric.timestamp)].join(' '))
   }
 
   format (metrics) {
