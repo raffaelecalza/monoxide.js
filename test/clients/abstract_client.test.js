@@ -1,10 +1,10 @@
 const net = require('net')
 const EventEmitter = require('events')
 const Timekeeper = require('timekeeper')
-const AbstractClient = require('../../src/clients/abstract_client')
-const MonoxideConfig = require('../../src/config/monoxide_config')
-const PlaintextProtocol = require('../../src/protocols/plaintext_protocol')
-const CarbonMetric = require('../../src/metrics/carbon_metric')
+const AbstractClient = require('../../lib/clients/abstract_client')
+const MonoxideConfig = require('../../lib/config/monoxide_config')
+const PlaintextProtocol = require('../../lib/protocols/plaintext_protocol')
+const CarbonMetric = require('../../lib/metrics/carbon_metric')
 
 describe('Abstract Client test', () => {
     let globalProtocol, globalConfig, globalClient, server, clientConnectedCb, dataCb

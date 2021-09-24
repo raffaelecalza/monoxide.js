@@ -1,6 +1,6 @@
 const Timekeeper = require('timekeeper')
-const CarbonMetric = require('../../src/metrics/carbon_metric')
-const PlaintextProtocol = require('../../src/protocols/plaintext_protocol')
+const CarbonMetric = require('../../lib/metrics/carbon_metric')
+const PlaintextProtocol = require('../../lib/protocols/plaintext_protocol')
 
 describe('Plaintext Protocol test', () => {
     test('create an instance of PlaintextProtocol class', () => {

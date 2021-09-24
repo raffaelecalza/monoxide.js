@@ -1,4 +1,4 @@
-const MonoxideConfig = require('../../src/config/monoxide_config')
+const MonoxideConfig = require('../../lib/config/monoxide_config')
 
 describe('Monoxide Config test', () => {
     test('create an instance of MonoxideConfig class using all parameters of constructor', () => {
