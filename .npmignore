@@ -1,0 +1,4 @@
+.github/*
+examples/*
+test/*
+jest.config.js
