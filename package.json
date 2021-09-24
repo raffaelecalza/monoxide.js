@@ -24,7 +24,7 @@
   "homepage": "https://github.com/raffaelecalza/monoxide.js",
   "dependencies": {
     "expect.js": "^0.3.1",
-    "lodash": "^3.5.0",
+    "lodash": "^4.17.21",
     "mocha": "^2.2.1",
     "sinon": "^1.14.1",
     "timekeeper": "0.0.5"
