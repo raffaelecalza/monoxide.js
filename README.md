@@ -4,7 +4,7 @@
 ![Github build status](https://img.shields.io/github/checks-status/raffaelecalza/monoxide.js/main?style=flat-square)
 ![License MIT](https://img.shields.io/github/license/raffaelecalza/monoxide.js?style=flat-square)
 
-Monoxide.js is a Node.js client for Carbon that is a component of Graphite, and is responsible for receiving metrics over the network and writing them down to disk using a storage backend. This project is a fork of [Oxide](https://github.com/mixer/oxide) but currently supports only Carbon and not Statsd as Oxide does (I'm planning to add the support for Statsd in the next releases).
+monoxide.js is a Node.js client for Carbon that is a component of Graphite, and is responsible for receiving metrics over the network and writing them down to disk using a storage backend. This project is a fork of [Oxide](https://github.com/mixer/oxide) but currently supports only Carbon and not Statsd as Oxide does (I'm planning to add the support for Statsd in the next releases).
 
 * [Installation](#installation)
 * [Examples](#examples)
@@ -31,6 +31,7 @@ const Monoxide = require('monoxide.js')
 ```
 
 ## Examples
+Inside the folder `/examples` you can see an example of sending metrics to Carbon using monoxide.js.
 
 ## Usage
 To start sending metrics to Carbon you need to create 3 objects:

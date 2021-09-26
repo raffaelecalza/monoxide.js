@@ -1,7 +1,7 @@
 {
   "name": "monoxide.js",
   "version": "1.0.0",
-  "description": "An evolution of oxide client for Carbon, a data injest tool which is a part of the Graphite project.",
+  "description": "monoxide.js is a client for Carbon, a data injest tool which is a part of the Graphite project ",
   "main": "index.js",
   "scripts": {
     "test": "standard && jest"
