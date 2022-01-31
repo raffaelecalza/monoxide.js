@@ -1,6 +1,6 @@
 const Timekeeper = require('timekeeper')
-const AbstractProtocol = require('../../src/protocols/abstract_protocol')
-const CarbonMetric = require('../../src/metrics/carbon_metric')
+const AbstractProtocol = require('../../lib/protocols/abstract_protocol')
+const CarbonMetric = require('../../lib/metrics/carbon_metric')
 
 describe('Abstract Protocol test', () => {
     test('create an instance of abstract protocol', () => {

@@ -1,5 +1,5 @@
 const Timekeeper = require("timekeeper")
-const CarbonMetric = require('../../src/metrics/carbon_metric')
+const CarbonMetric = require('../../lib/metrics/carbon_metric')
 
 describe('Carbon Metric test', () => {
     test('create an instance of CarbonMetric with values set correctly', () => {

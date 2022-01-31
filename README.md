@@ -1,105 +1,136 @@
-# monoxide.js - Work in progress
+# monoxide.js <!-- omit in toc -->
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)
+![npm version](https://img.shields.io/npm/v/monoxide.js?label=npm&style=flat-square)
+![Github build status](https://img.shields.io/github/workflow/status/raffaelecalza/monoxide.js/CI?style=flat-square)
+[![License MIT](https://img.shields.io/github/license/raffaelecalza/monoxide.js?label=license&style=flat-square)](https://github.com/raffaelecalza/monoxide.js/blob/main/LICENSE)
 
-## Original description from oxide.js:
-Oxide is a Node.js client designed for easy communicating with [Carbon](https://github.com/graphite-project/carbon), a data injest tool which is a part of the Graphite project.  Oxide also works well with [Statsd](https://github.com/etsy/statsd), a fantastic little tool from the folks at Etsy designed for more powerful metrics recording.
+monoxide.js is a Node.js client for Carbon that is a component of Graphite, and is responsible for receiving metrics over the network and writing them down to disk using a storage backend. This project is a fork of [Oxide](https://github.com/mixer/oxide) but currently supports only Carbon and not Statsd as Oxide does (I'm planning to add the support for Statsd in the next releases).
+
+* [Installation](#installation)
+* [Examples](#examples)
+* [Usage](#usage)
+  * [1. Config](#1-config)
+  * [2. Protocols](#2-protocols)
+    * [Pickle Protocol](#pickle-protocol)
+    * [Plaintext Protocol](#plaintext-protocol)
+    * [Create your custom protocol](#create-your-custom-protocol)
+  * [3. Carbon client](#3-carbon-client)
+* [Test](#test)
+* [Credits](#credits)
+* [Contribution](#contribution)
 
 ## Installation
-
-oxide.js is a npm package, so installation couldn't be easier.  To install oxide.js as a dependency, simply execute:
-
-```shell
-$ npm install oxide.js --save
+To install this library, open a terminal and type:
+```bash
+npm i monoxide.js
 ```
 
-And then require oxide in your project:
-
+Then, at the beginning of your `.js` file, paste the following line:
 ```js
-var Oxide = require('oxide.js');
+const Monoxide = require('monoxide.js')
 ```
 
-## Theory of Operation
-
-`oxide.js` is a pretty simple tool.  It aggregates metrics using the `#record` method, and then compacts them using either one of two protocols, the [pickle protocol](http://graphite.readthedocs.org/en/latest/feeding-carbon.html#the-pickle-protocol) or the [plaintext protocol](http://graphite.readthedocs.org/en/latest/feeding-carbon.html#the-plaintext-protocol).  On a given interval (see the [usage](#usage) section), the protocol will compact all of the `Metric`s in the client's queue, send them over the socket, and dump the queue.
-
-When using `Oxide.js` in Statsd mode, it will aggregate the stats using the same queueing method as in carbon mode, however, it will not use a protocol to compact the data, instead, it will pack each metric individually, create a buffer, and send that.  At this time, Statsd does not allow for protocol-based metric sending over UDP.
-
-The queuing operations are thread-safe.
+## Examples
+Inside the folder `/examples` you can see an example of sending metrics to Carbon using monoxide.js.
 
 ## Usage
-
-Once you have the `oxide.js` namespace in your project, usage is pretty simple.  To construct an oxide client, simply pass an object containing your arguments to the constructor, i.e.:
-
+To start sending metrics to Carbon you need to create 3 objects:
+1. the config object that stores the information about the server (Carbon)
+2. the protocol object that formats the metrics before sending them to Carbon
+3. the client that stores the metrics and periodically sends them to Carbon
+### 1. Config
+After you installed and imported the library correctly, the first thing you need to create is a `Config` object. This class is responsible to store the data that will be used to connect to Carbon.
 ```js
-var Oxide = require('oxide.js');
-
-/**
- * The following options are supported:
- *   host: the hostname of your carbon server
- *   port: the port your carbon server runs on
- *   prefix: prefixes all paths with the given value (i.e., foo -> prefix.foo)
- *   interval: the time in msec to send statistics
- *   protocol: an instance of the protocol to send statistics with
- */
-var oxideClient = new Oxide.Client.CarbonClient({
-  host: '127.0.0.1',
-  port: 2003,
-  interval: 5000
-});
+const config = new Monoxide.Config('127.0.0.1', 1234, 10000, 'your.global.prefix')
 ```
 
-To write a metric into Oxide's aggregate queue, simply fire off the `#record` method:
+The `config` object has 4 properties:
+- _host_: the ip address of the host where Carbon is currently running (`127.0.0.1`)
+- _port_: the port where Carbon is currently listening (`1234`)
+- _interval_: the interval in ms each time the metrics are sent to the server (`10000`)
+- _prefix_: the prefix that will be appended to every metric's path before sending the metric to Carbon (`your.global.prefix`)
 
+The prefix is optional and can be omitted in the last parameter of the constructor if you don't want to prefix anything in the metric's path.
+
+Also, if you don't pass anything to the constructor the config object will use the following parameters to connect to Carbon:
+- host: `127.0.0.1`
+- port: `2003`
+- interval: `5000`
+- prefix: `<nothing>`
+
+### 2. Protocols
+After you have created the config object, you have to create the protocol object. This object will be the responsible of formatting the metrics before sending them to the server.
+
+You can choose between 2 different types of protocols:
+- **pickle protocol** [[More](https://graphite.readthedocs.io/en/latest/feeding-carbon.html#the-pickle-protocol)]
+- **plaintext protocol** [[More](https://graphite.readthedocs.io/en/latest/feeding-carbon.html#the-plaintext-protocol)]
+
+#### Pickle Protocol
+You can create an instance of the pickle protocol like this:
 ```js
-// Connect to the server
-oxideClient.connect();
-
-// Start the queuing operations
-oxideClient.start();
-
-/**
- * #record takes three arguments, as described below:
- *   1) path - the path to write the metric to
- *   2) value - the value to write onto the metric
- *   3) [optional] timestamp - the time to record the metric
- */
-oxideClient.record('my.path', 50, new Date());
+const protocol = new Monoxide.Protocols.PickleProtocol()
 ```
 
-A call to `#record` makes a `new Oxide.Metric` and dumps it in the queue.  After the time specified in the interval, `oxide.js` will collect all statistics currently in the queue, and pack them using the protocol, then send them up the wire.
-
-The Statsd client is more interesting, since statsd supports more metric types.  All protocols described in [this spec](https://github.com/b/statsd_spec) are implemented by the client using a different method call.  Examples follow below:
-
+#### Plaintext Protocol
+You can create an instance of the plaintext protocol like this:
 ```js
-var client = new Oxide.Client.StatsdClient({ /* opts */ });
-client.connect();
-client.start();
-
-// Send a counter metric to increment the `path` argument by 1, or the amount specified.
-client.increment(path[, amount[, sampleRate]]);
-
-// Send a counter metric to decrement the `path` given by 1, otherwise the amount specified.
-client.decrement(path[, amount[, sampleRate]]);
-
-// Send a gauge metric to set the value of `path` to the amount specified.
-client.gauge(path, amount);
-
-// Send a timer metric to mark the time of the `path` to the amount specified.
-client.timing(path, duration); // duration in msec
+const protocol = new Monoxide.Protocols.PlaintextProtocol()
 ```
 
-That's it!
+#### Create your custom protocol
+If you want, you can create your custom protocol. Just override the `AbstractProtocol` class or create an instance of this class. If you want to know more, you can take a look at the `AbstractProtocol` class's code and also at the derived classes `PlaintextProtocol` and `PickleProtocol`.
 
-## Contributing
+### 3. Carbon client
+The client is the core component of the library. It's responsible of record, store and send metrics to the Carbon service. First, create the client:
+```js
+const client = new Monoxide.Clients.CarbonClient(config, protocol)
+```
 
-[Pull-requests](https://github.com/WatchBeam/oxide/pulls) are always appreciated!  If you want to add a feature, close an [issue](https://github.com/WatchBeam/oxide/issues) or otherwise, follow the following process:
+Then, you need to start the process that sends the metrics periodically and opens a socket connection to Carbon:
+```js
+client.start()
+```
 
-1. Fork this repo
-2. Cut a branch (with the convention `feature|bugfix/<branch-name>`
-3. Write your feature/bugfix/etc
-4. Write an accompanying test
-5. Ensure that your tests pass (a call to `$ npm test` will verify this easily)
-4. Submit a pull-request upstream!
+The client emits 2 events:
+- `error`: everytime there is an error (for example, if there was an error sending the metrics)
+- `metrics-sent`: everytime the metrics are correctly sent to Carbon
 
-## License
+You should at least subscribe to the `error` event so you can process the errors:
+```js
+client.on('error', (err) => {
+  // process the error
+})
 
-MIT
+client.on('metrics-sent', () => {
+  // do some stuff
+})
+```
+
+Now, you can record metrics that will be sent periodically to Carbon (using the interval you specified in the config object):
+```js
+client.record('example.metric.1', 123, new Date())
+```
+
+The metric will be enqueued and sent the next time the process that sends metrics will be executed. If you have specified the prefix, the record method will add the prefix in front of the metric path.
+
+Also, If you don't provide the date object, the metric will be stored with the timestamp of its creation.
+
+
+If you need, you can stop the sending process and close the connection to the server (you can restart the process using the `.start()` method):
+```js
+client.stop()
+```
+
+## Test
+If you want to test the code, clone the repo locally on your computer, install the project dependencies and then run:
+```bash
+npm test
+```
+
+This command firstly check that the code follows the Standard's guide lines (you can read more [here](https://standardjs.com/)) then run the tests that are inside the `/tests` folder using [Jest](https://jestjs.io/).
+
+## Credits
+As I said above, this project is a fork of Oxide. I decided to rewrite this library because on Github the project has been archived and on npm the last version doesn't reflect the code on Github.
+
+## Contribution
+If you find a bug or just want to contribute to the project, you can open an issue or fork the project and then open a pull request.

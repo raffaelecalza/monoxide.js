@@ -1,1 +1,1 @@
-module.exports = require('./src/monoxide')
+module.exports = require('./lib')

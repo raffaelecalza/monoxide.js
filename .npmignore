@@ -2,3 +2,4 @@
 examples/*
 test/*
 jest.config.js
+.vscode/*
