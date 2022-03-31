@@ -1,5 +1,5 @@
 // import Monoxide library
-const Monoxide = require('../src')
+const Monoxide = require('../lib')
 
 // create config object
 const config = new Monoxide.Config('127.0.0.1', 2003, 10000, 'example.carbon.client')
