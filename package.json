@@ -4,6 +4,8 @@
   "description": "monoxide.js is a client for Carbon, a data injest tool which is a part of the Graphite project ",
   "main": "index.js",
   "scripts": {
+    "lint": "standard",
+    "lint-fix": "standard-fix",
     "test": "standard && jest"
   },
   "repository": {
@@ -18,7 +20,6 @@
   ],
   "standard": {
     "ignore": [
-      "old_test/*",
       "test/*",
       "jest.config.js"
     ]
