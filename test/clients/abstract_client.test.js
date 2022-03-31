@@ -64,6 +64,14 @@ describe('Abstract Client test', () => {
         expect(() => {new AbstractClient(globalConfig)}).toThrowError()
     })
 
+    test('throw an error if config is not an instance of MonoxideConfig class', () => {
+        expect(() => {new AbstractClient({foo: 'bar'}, {foo: 'bar'})}).toThrowError('Config object should')
+    })
+
+    test('throw an error if protocol is not an instance of AbstractProtocol class', () => {
+        expect(() => {new AbstractClient(globalConfig, {foo: 'bar'})}).toThrowError('Protocol object should')
+    })
+
     test('pathify should return prefix + path', () => {
         expect(globalClient._pathify('metric.1')).toEqual('test.client.metric.1')
         globalClient.config.prefix = ''
