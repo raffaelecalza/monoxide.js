@@ -19,6 +19,7 @@ jobs:
         run: npx standard
       - name: Run tests
         run: npx jest
-      - run: npm publish
+      - name: Publish package to NPM registry
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
