@@ -1,8 +1,9 @@
 {
   "name": "monoxide.js",
   "version": "1.0.0",
-  "description": "monoxide.js is a client for Carbon, a data injest tool which is a part of the Graphite project ",
+  "description": "monoxide.js is a client for Carbon, a data injest tool which is a part of the Graphite project",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "lint": "standard",
     "lint-fix": "standard-fix",
