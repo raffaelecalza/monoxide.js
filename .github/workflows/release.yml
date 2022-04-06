@@ -1,8 +1,8 @@
 name: Publish NPM package
 on:
-  release:
-    branches: [master]
-    types: [created]
+  push:
+    tags:
+      - "v*"
 jobs:
   build:
     runs-on: ubuntu-latest
