@@ -4,28 +4,28 @@
 ![Github build status](https://img.shields.io/github/workflow/status/raffaelecalza/monoxide.js/CI?style=flat-square)
 [![License MIT](https://img.shields.io/github/license/raffaelecalza/monoxide.js?label=license&style=flat-square)](https://github.com/raffaelecalza/monoxide.js/blob/main/LICENSE)
 
-monoxide.js is a Node.js client for Carbon that is a component of Graphite, and is responsible for receiving metrics over the network and writing them down to disk using a storage backend. This project is a fork of [Oxide](https://github.com/mixer/oxide) but currently supports only Carbon and not Statsd as Oxide does (I'm planning to add the support for Statsd in the next releases).
+monoxide.js is a Node.js client for Carbon that is a component of Graphite, and is responsible for receiving metrics over the network and writing them down to disk using a storage backend. This project is a fork of [Oxide](https://github.com/mixer/oxide) but currently supports only Carbon and not StatsD as Oxide does (I'm planning to add the support for StatsD in the next releases).
 
 * [Installation](#installation)
 * [Examples](#examples)
 * [Usage](#usage)
-  * [1. Config](#1-config)
-  * [2. Protocols](#2-protocols)
+  * [Configuration](#configuration)
+  * [Protocols](#protocols)
     * [Pickle Protocol](#pickle-protocol)
     * [Plaintext Protocol](#plaintext-protocol)
     * [Create your custom protocol](#create-your-custom-protocol)
-  * [3. Carbon client](#3-carbon-client)
+  * [Carbon client](#carbon-client)
 * [Test](#test)
-* [Credits](#credits)
 * [Contribution](#contribution)
+* [Credits](#credits)
 
 ## Installation
 To install this library, open a terminal and type:
 ```bash
-npm i monoxide.js
+npm i --save monoxide.js
 ```
 
-Then, at the beginning of your `.js` file, paste the following line:
+Then, import the library in your project:
 ```js
 const Monoxide = require('monoxide.js')
 ```
@@ -38,7 +38,8 @@ To start sending metrics to Carbon you need to create 3 objects:
 1. the config object that stores the information about the server (Carbon)
 2. the protocol object that formats the metrics before sending them to Carbon
 3. the client that stores the metrics and periodically sends them to Carbon
-### 1. Config
+
+### Configuration
 After you installed and imported the library correctly, the first thing you need to create is a `Config` object. This class is responsible to store the data that will be used to connect to Carbon.
 ```js
 const config = new Monoxide.Config('127.0.0.1', 1234, 10000, 'your.global.prefix')
@@ -58,7 +59,7 @@ Also, if you don't pass anything to the constructor the config object will use t
 - interval: `5000`
 - prefix: `<nothing>`
 
-### 2. Protocols
+### Protocols
 After you have created the config object, you have to create the protocol object. This object will be the responsible of formatting the metrics before sending them to the server.
 
 You can choose between 2 different types of protocols:
@@ -80,7 +81,7 @@ const protocol = new Monoxide.Protocols.PlaintextProtocol()
 #### Create your custom protocol
 If you want, you can create your custom protocol. Just override the `AbstractProtocol` class or create an instance of this class. If you want to know more, you can take a look at the `AbstractProtocol` class's code and also at the derived classes `PlaintextProtocol` and `PickleProtocol`.
 
-### 3. Carbon client
+### Carbon client
 The client is the core component of the library. It's responsible of record, store and send metrics to the Carbon service. First, create the client:
 ```js
 const client = new Monoxide.Clients.CarbonClient(config, protocol)
@@ -127,10 +128,8 @@ If you want to test the code, clone the repo locally on your computer, install t
 npm test
 ```
 
-This command firstly check that the code follows the Standard's guide lines (you can read more [here](https://standardjs.com/)) then run the tests that are inside the `/tests` folder using [Jest](https://jestjs.io/).
+## Contribution
+If you find a bug or just want to contribute to the project, you can open an [issue](https://github.com/raffaelecalza/monoxide.js/issues/new) or fork the project and then open a pull request on branch `dev`.
 
 ## Credits
-As I said above, this project is a fork of Oxide. I decided to rewrite this library because on Github the project has been archived and on npm the last version doesn't reflect the code on Github.
-
-## Contribution
-If you find a bug or just want to contribute to the project, you can open an issue or fork the project and then open a pull request.
+As I said above, this project is a fork of [Oxide](https://github.com/mixer/oxide). I decided to rewrite this library because on Github the project has been archived and on npm the last version doesn't reflect the code on Github.
