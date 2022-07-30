@@ -27,7 +27,8 @@ describe('Abstract Client test', () => {
 
     beforeEach(() => {
         // mock intervals and timeouts using jest
-        jest.useFakeTimers('legacy')
+        jest.useFakeTimers()
+        jest.spyOn(global, 'setInterval');
     })
 
     afterEach(() => {
