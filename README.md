@@ -1,7 +1,7 @@
 # monoxide.js <!-- omit in toc -->
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)
 ![npm version](https://img.shields.io/npm/v/monoxide.js?label=npm&style=flat-square)
-![Github build status](https://img.shields.io/github/workflow/status/raffaelecalza/monoxide.js/CI?style=flat-square)
+![Github build status](https://img.shields.io/github/actions/workflow/status/raffaelecalza/monoxide.js/ci.yml?branch=main&style=flat-square)
 [![License MIT](https://img.shields.io/github/license/raffaelecalza/monoxide.js?label=license&style=flat-square)](https://github.com/raffaelecalza/monoxide.js/blob/main/LICENSE)
 
 monoxide.js is a Node.js client for Carbon that is a component of Graphite, and is responsible for receiving metrics over the network and writing them down to disk using a storage backend. This project is a fork of [Oxide](https://github.com/mixer/oxide) but currently supports only Carbon and not StatsD as Oxide does (I'm planning to add the support for StatsD in the next releases).
